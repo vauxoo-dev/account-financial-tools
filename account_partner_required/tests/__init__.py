@@ -21,7 +21,3 @@
 ##############################################################################
 
 from . import test_account_partner_required
-
-checks = [
-    test_account_partner_required,
-]
