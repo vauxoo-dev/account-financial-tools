@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="crossovered_budget_view_report_form">
+            <field name="name">crossovered.budget.view.form</field>
+            <field name="model">crossovered.budget</field>
+            <field name="inherit_id" ref="account_budget.crossovered_budget_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/*[1]" position="before">
+                    <button name="check_report"
+                        string="Print Report HTML"
+                        type="object"
+                        icon="gtk-print"
+                        context="{'is_webkit':1,'report':1}"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
+
+
+

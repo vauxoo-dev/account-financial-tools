@@ -29,16 +29,19 @@
     "category": "Account",
     "author": "Vauxoo",
     "website": "http://www.vauxoo.com",
-    "depends": ["base",],
-    "data": [],
+    "depends": [
+        "base",
+        "account_budget",
+    ],
+    "data": [
+        "view/account_budget_view.xml",
+    ],
     "test": [],
     "images": [],
     "demo": [],
     "css": [
-        "static/src/css/bootstrap.min.css",
     ],
     "js": [
-        "static/src/js/bootstrap.min.js",
     ],
     "installable": True,
     "auto_install": False,
