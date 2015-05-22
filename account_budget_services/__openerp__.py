@@ -26,7 +26,7 @@
 {
     'name': 'Account Budget Services',
     'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
+    'category': 'Account',
     'author': 'Vauxoo',
     'website': 'http://www.vauxoo.com',
     'depends': ['base',],
