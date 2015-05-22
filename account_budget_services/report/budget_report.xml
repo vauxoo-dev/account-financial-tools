@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    <!--
+        <report auto="False"
+                id="fiscal_book_webkit_purchase_vauxoo"
+                model="fiscal.book.wizard"
+                name="fiscal.book.webkit.purchase.vauxoo"
+                file="cicsa_fiscal_book_report/report/fiscal_book_purchase_html.mako"
+                string="Fiscal Book Purchase Webkit"
+                report_type="webkit"
+                menu="True"/>
+
+        <record id="property_fiscal_book_purchase_report_webkit_vauxoo" model="ir.property">
+            <field name="name">webkit_header</field>
+            <field name="fields_id" ref="report_webkit.field_ir_act_report_xml_webkit_header"/>
+            <field eval="'ir.header_webkit,'+str(ref('cicsa_fiscal_book_report.ir_header_webkit_facturae_vauxoo'))" model="ir.header_webkit" name="value"/>
+            <field eval="'ir.actions.report.xml,'+str(ref('cicsa_fiscal_book_report.fiscal_book_webkit_purchase_vauxoo'))" model="ir.actions.report.xml" name="res_id"/>
+        </record>
+
+
+        <report auto="False"
+                id="fiscal_book_webkit_sale_vauxoo"
+                model="fiscal.book.wizard"
+                name="fiscal.book.webkit.sale.vauxoo"
+                file="cicsa_fiscal_book_report/report/fiscal_book_sale_html.mako"
+                string="Fiscal Book Sale Webkit"
+                report_type="webkit"
+                menu="True"/>
+        <record id="property_fiscal_book_report_webkit_vauxoo" model="ir.property">
+            <field name="name">webkit_header</field>
+            <field name="fields_id" ref="report_webkit.field_ir_act_report_xml_webkit_header"/>
+            <field eval="'ir.header_webkit,'+str(ref('cicsa_fiscal_book_report.ir_header_webkit_facturae_vauxoo'))" model="ir.header_webkit" name="value"/>
+            <field eval="'ir.actions.report.xml,'+str(ref('cicsa_fiscal_book_report.fiscal_book_webkit_sale_vauxoo'))" model="ir.actions.report.xml" name="res_id"/>
+        </record>
+
+    -->
+
+
+        <report auto="False"
+                id="budget_webkit"
+                model="crossovered.budget"
+                name="budget.webkit.report"
+                file="account_budget_services/report/budget_webkit.mako"
+                string="Budget Webkit"
+                report_type="webkit"
+                menu="False"/>
+
+        <!--
+        <record id="property_budget_webkit" model="ir.property">
+            <field name="name">webkit_header</field>
+            <field name="fields_id" ref="report_webkit.field_ir_act_report_xml_webkit_header"/>
+            <field eval="'ir.header_webkit,'+str(ref('account_budget_services.ir_header_webkit_facturae_vauxoo'))" model="ir.header_webkit" name="value"/>
+            <field eval="'ir.actions.report.xml,'+str(ref('account_budget_services.fiscal_book_webkit_purchase_vauxoo_rev2'))" model="ir.actions.report.xml" name="res_id"/>
+        </record>
+
+        <record id="budget_webkit" model="ir.actions.report.xml">
+            <field name="webkit_debug">True</field>
+            <field name="precise_mode">True</field>
+        </record>
+        -->
+
+    </data>
+</openerp>

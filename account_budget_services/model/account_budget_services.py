@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- encoding: utf-8 -*-
 ###############################################################################
 #    Module Writen to OpenERP, Open Source Management Solution
@@ -22,31 +23,36 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
 
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
-{
-    "name": "Account Budget Services",
-    "version": "1.0",
-    "category": "Account",
-    "author": "Vauxoo",
-    "website": "http://www.vauxoo.com",
-    "depends": [
-        "base",
-        "account_budget",
-        "report_webkit",
-    ],
-    "data": [
-        "report/budget_report.xml",
-        "view/account_budget_view.xml",
-    ],
-    "test": [],
-    "images": [],
-    "demo": [],
-    "css": [
-        "static/src/css/bootstrap.min.css",
-    ],
-    "js": [
-        "static/src/js/bootstrap.min.js",
-    ],
-    "installable": True,
-    "auto_install": False,
-}
+import openerp.addons.decimal_precision as dp
+
+class crossovered_budget(osv.Model):
+
+    _inherit = "crossovered.budget"
+
+    def check_report(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        data = {}
+        data['ids'] = ids
+        data['model'] = self._inherit
+        data['form'] = self.read(cr, uid, ids, ['code', 'name'])[0]
+
+        return self._print_report(cr, uid, ids, data, context=context)
+
+    def _print_report(self, cr, uid, ids, data, context=None):
+
+        data['ids'] = ids
+        res = {
+            'type': 'ir.actions.report.xml',
+            'datas': data,
+        }
+
+        if context.get('is_webkit', False):
+            res['report_name'] = 'budget.webkit.report'
+        else:
+            res['report_name'] = 'budget.html.report'
+
+        return res

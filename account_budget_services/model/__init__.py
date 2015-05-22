@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- encoding: utf-8 -*-
 ###############################################################################
 #    Module Writen to OpenERP, Open Source Management Solution
@@ -22,31 +23,4 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
 
-
-{
-    "name": "Account Budget Services",
-    "version": "1.0",
-    "category": "Account",
-    "author": "Vauxoo",
-    "website": "http://www.vauxoo.com",
-    "depends": [
-        "base",
-        "account_budget",
-        "report_webkit",
-    ],
-    "data": [
-        "report/budget_report.xml",
-        "view/account_budget_view.xml",
-    ],
-    "test": [],
-    "images": [],
-    "demo": [],
-    "css": [
-        "static/src/css/bootstrap.min.css",
-    ],
-    "js": [
-        "static/src/js/bootstrap.min.js",
-    ],
-    "installable": True,
-    "auto_install": False,
-}
+from . import account_budget_services
