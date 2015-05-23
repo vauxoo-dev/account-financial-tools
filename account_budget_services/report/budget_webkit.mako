@@ -11,6 +11,7 @@
     %for obj in objects :
 <div class="table-responsive">
 
+    <!--<table class="table table-bordered" >-->
       <table class="table table-bordered" >
         <thead>
           <tr>
@@ -22,6 +23,9 @@
               <th>18/05</th>
               <th>20/05</th>
               <th>30/05</th>
+              <th>18/06</th>
+              <th>20/06</th>
+              <th>30/06</th>
           </tr>
         </thead>
         <tbody>
@@ -38,13 +42,19 @@
             <td rowspan="2"></td>
             <td rowspan="2"></td>
             <td rowspan="2"></td>
+            <td rowspan="2"></td>
+            <td rowspan="2"></td>
+            <td rowspan="2"></td>
           </tr>
           <tr>
             <td>Real</td>
             <td>900.00</td>
           </tr>
           <tr class="BorderSpecial BorderGreen">
-              <th scope="row" colspan="2"><div style="margin-top:-9px;">Income</div></th>
+              <th scope="row" colspan="2"><div style="margin-top:-5px;">Income</div></th>
+            <td></td>
+            <td></td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -62,6 +72,9 @@
             <td>500</td>
             <td>30000</td>
             <td>50000</td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <th scope="row" colspan="2">Real</th>
@@ -72,6 +85,9 @@
             <td>0</td>
             <td>1000</td>
             <td>20000</td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
             
             
@@ -89,6 +105,9 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <td>Real</td>
@@ -99,10 +118,16 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <td>Desv.</td>
             <td>-50%</td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -121,6 +146,9 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>  
             <th scope="row" colspan="2">Cicsa</th>
@@ -131,10 +159,16 @@
             <td>7000</td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <th scope="row" colspan="2">Lodi</th>
             <td>200</td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -151,6 +185,9 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <th scope="row" colspan="2">Lodi</th>
@@ -161,10 +198,16 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <th scope="row" colspan="2">Prod1</th>
             <td>5000</td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -181,9 +224,15 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr class="BorderSpecial BorderRed">
-              <th colspan="2"><div style="margin-top:-9px;">Expenses</div></th>
+              <th colspan="2"><div style="margin-top:-5px;">Expenses</div></th>
+            <td></td>
+            <td></td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -202,10 +251,16 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <th scope="row" colspan="2">Real</th>
             <td>5000</td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -222,6 +277,9 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <th scope="row" colspan="2">Internet</th>
@@ -232,11 +290,17 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <th scope="row" colspan="2">TDC</th>
             <td></td>
             <td>9000</td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -252,6 +316,9 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <th scope="row" colspan="2">House</th>
@@ -262,6 +329,9 @@
             <td>50000</td>
             <td></td>
             <td>25000</td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <th scope="row" colspan="2">Payroll</th>
@@ -272,6 +342,9 @@
             <td></td>
             <td>3000</td>
             <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <th scope="row" colspan="2">Absolute</th>
@@ -281,6 +354,9 @@
             <td><strong>70000</strong></td>
             <td><strong></strong></td>
             <td><strong>50000</strong></td>
+            <td><strong></strong></td>
+            <td><strong></strong></td>
+            <td><strong></strong></td>
             <td><strong></strong></td>
           </tr>
         </tbody>
