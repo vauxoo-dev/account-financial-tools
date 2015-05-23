@@ -20,7 +20,7 @@ table{
     text-align: center;
 }
 table th > div {
-     height: 3px;
+     height: 13px;
 }
 
 .BorderSpecial {
