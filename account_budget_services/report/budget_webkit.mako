@@ -47,8 +47,7 @@
         </thead>
         <tbody>
            <tr scope="row">
-            <th rowspan="2">
-                <p><br/>Opening</p>
+            <th style="border: 0px;">
             </th>
             <td>Plan</td>
             <td>1000.00</td>
@@ -65,6 +64,9 @@
             <td rowspan="2"></td>
           </tr>
           <tr>
+            <th style="border: 0px;margin: 0px; padding: 0;">
+            <div>Opening</div>
+            </th>
             <td>Real</td>
             <td>900.00</td>
           </tr>
