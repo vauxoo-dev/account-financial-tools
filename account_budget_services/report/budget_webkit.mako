@@ -9,7 +9,7 @@
 </head>
 <body style="border:0;"> 
     %for obj in objects :
-<div class="table-responsive">
+<div class="raw">
 
     <!--<table class="table table-bordered" >-->
       <table class="table table-bordered text-center" >
