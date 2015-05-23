@@ -15,6 +15,21 @@
       <table class="table table-bordered text-center" >
         <thead>
           <tr>
+              <th colspan="2"></th>
+              <th></th>
+              <th></th>
+              <th><div class="Absolute-Center">Date Prined</div></th>
+              <th><div class="Absolute-Center">Printed</div></th>
+              <th><div class="Absolute-Center">Nhomar</div></th>
+              <th><div class="Absolute-Center">Currency</div></th>
+              <th><div class="Absolute-Center">USD</div></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+          </tr>
+          <tr>
               <th colspan="2"><div class="Absolute-Center">Nombre \ Fecha Venc.</th>
               <th><div class="Absolute-Center">10/04</div></th>
               <th><div class="Absolute-Center">15/04</div></th>
@@ -409,7 +424,21 @@
             <td><strong></strong></td>
             <td><strong></strong></td>
             <td><strong></strong></td>
-            <td><strong></strong></td>
+          </tr>
+          <tr>
+            <th scope="row" colspan="2">Desv.</th>
+            <td>-80%</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
         </tbody>
       </table>
