@@ -42,12 +42,6 @@
     "test": [],
     "images": [],
     "demo": [],
-    # "css": [
-    #     "static/src/css/bootstrap.min.css",
-    # ],
-    # "js": [
-    #     "static/src/js/bootstrap.min.js",
-    # ],
     "installable": True,
     "auto_install": False,
 }
