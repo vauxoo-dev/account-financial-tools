@@ -12,7 +12,7 @@
                         string="Print Report HTML"
                         type="object"
                         icon="gtk-print"
-                        context="{'is_webkit':1,'report':1}"/>
+                        context="{'is_webkit':1}"/>
                 </xpath>
             </field>
         </record>

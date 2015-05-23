@@ -35,18 +35,19 @@
         "report_webkit",
     ],
     "data": [
+        "data/budget_css.xml",
         "report/budget_report.xml",
         "view/account_budget_view.xml",
     ],
     "test": [],
     "images": [],
     "demo": [],
-    "css": [
-        "static/src/css/bootstrap.min.css",
-    ],
-    "js": [
-        "static/src/js/bootstrap.min.js",
-    ],
+    # "css": [
+    #     "static/src/css/bootstrap.min.css",
+    # ],
+    # "js": [
+    #     "static/src/js/bootstrap.min.js",
+    # ],
     "installable": True,
     "auto_install": False,
 }

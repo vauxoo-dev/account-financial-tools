@@ -23,10 +23,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ###############################################################################
 
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from openerp.osv import osv
 
-import openerp.addons.decimal_precision as dp
 
 class crossovered_budget(osv.Model):
 
@@ -52,7 +50,5 @@ class crossovered_budget(osv.Model):
 
         if context.get('is_webkit', False):
             res['report_name'] = 'budget.webkit.report'
-        else:
-            res['report_name'] = 'budget.html.report'
 
         return res
