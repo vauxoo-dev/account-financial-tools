@@ -103,8 +103,8 @@
             
             
           <tr scope="row">
-            <th rowspan="3">
-                 <br/> <br/>
+            <th rowspan="3" col="2">
+                <!-- not align vertically -->
                 <p align="center">Total</p>
             </th>
             <td>Plan</td>
