@@ -22,7 +22,7 @@
 
 {
     'name': 'Account partner required',
-    'version': '0.1',
+    'version': '8.0.0.1.0',
     'category': 'Generic Modules/Accounting',
     'license': 'AGPL-3',
     'description': """This module adds an option "partner policy"
@@ -38,7 +38,7 @@ Module developed by Stéphane Bidoul <stephane.bidoul@acsone.eu>,
 inspired by Alexis de Lattre <alexis.delattre@akretion.com>'s
 account_analytic_required module.
 """,
-    'author': 'ACSONE SA/NV',
+    'author': "ACSONE SA/NV,Odoo Community Association (OCA)",
     'website': 'http://acsone.eu/',
     'depends': ['account'],
     'data': ['account_view.xml'],
