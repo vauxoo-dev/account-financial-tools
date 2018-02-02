@@ -1,5 +1,5 @@
 .. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
-   :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
+   :target: http://www.gnu.org/licenses/agpl
    :alt: License: AGPL-3
 
 ===========================
@@ -8,11 +8,6 @@ Credit control dunning fees
 
 This module extends the functionality of account_credit_control to add
 the notion of dunning fees on credit control lines.
-
-Installation
-============
-
-Just install it.
 
 Configuration
 =============
@@ -27,10 +22,6 @@ the credit control line currency.
 
 The product is used to compute taxes in reconciliation process.
 
-.. figure:: path/to/local/image.png
-   :alt: alternative description
-   :width: 600 px
-
 Usage
 =====
 
@@ -44,7 +35,7 @@ Support of fees price list
 
 .. image:: https://odoo-community.org/website/image/ir.attachment/5784_f2813bd/datas
    :alt: Try me on Runbot
-   :target: https://runbot.odoo-community.org/runbot/92/10.0
+   :target: https://runbot.odoo-community.org/runbot/92/11.0
 
 Bug Tracker
 ===========
