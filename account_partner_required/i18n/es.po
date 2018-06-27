@@ -53,21 +53,25 @@ msgstr "Opcional"
 #: code:addons/account_partner_required/models/account.py:55
 #, python-format
 msgid ""
-"Partner policy is set to 'Always' with account '%s' but the partner is "
-"missing in the account move line with label '%s'."
+"Partner policy is set to 'Always' for the account '%s' "
+"but the partner is missing in the account move line "
+"with label '%s'."
 msgstr ""
-"La política de la empresa esta configurada como 'Siempre' para la cuenta '%s' pero la empresa esta "
-"faltando en la línea de la cuenta con descripción '%s'."
+"La política de empresa está configurada como 'Siempre' para la cuenta '%s' "
+"pero la empresa está faltando en la línea de la póliza "
+"con descripción '%s'."
 
 #. module: account_partner_required
 #: code:addons/account_partner_required/models/account.py:61
 #, python-format
 msgid ""
-"Partner policy is set to 'Never' with account '%s' but the account move line "
-"with label '%s' has a partner '%s'."
+"Partner policy is set to 'Never' for the account '%s' "
+"but the account move line with label '%s' has a partner "
+"set '%s'."
 msgstr ""
-"La política de la empresa esta configurada como 'Nunca' para la cuenta '%s' pero la linea de la cuenta "
-"con descripción '%s' tiene una empresa '%s'."
+"La política de empresa está configurada como 'Nunca' para la cuenta '%s' "
+"pero la línea de la póliza con descripción  '%s' tiene una empresa "
+"asignada '%s'."
 
 #. module: account_partner_required
 #: model:ir.model.fields,field_description:account_partner_required.field_account_account_type_partner_policy
