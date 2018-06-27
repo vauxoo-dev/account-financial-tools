@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="wizard_validate_template" model="ir.ui.view">
+            <field name="name">Validate Recurring Entries</field>
+            <field name="model">wizard.validate.move.template</field>
+            <field name="arch" type="xml">
+                <form string="Validate Entries from Template" >
+                    <group>
+                        <group>
+                            <field name="date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Validate Entries" name="action_validate_moves" class="btn-primary" type="object"/>
+                        <button special="cancel" string="Cancel" class="btn-default"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_validate_template" model="ir.actions.act_window">
+            <field name="name">Validate Recurring Entries</field>
+            <field name="res_model">wizard.validate.move.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="wizard_validate_template"/>
+            <field name="target">new</field>
+        </record>
+
+        <act_window name="Validate Moves from Template"
+            res_model="wizard.validate.move.template"
+            src_model="account.move"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="action_wizard_validate_template_by_move"
+            view_id="wizard_select_template"/>
+
+        <menuitem
+            name="Validate Moves from Template"
+            action="action_wizard_validate_template"
+            id="menu_action_validate_move_template" sequence="20"
+            parent="account_move_template.menu_action_move_template_menu"
+            groups="account.group_account_manager"/>
+</odoo>

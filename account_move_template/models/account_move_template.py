@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-# Copyright 2015-2017 See manifest
-# License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from odoo import models, fields, api
 
@@ -27,6 +26,61 @@ class AccountMoveTemplate(models.Model):
         'account.move.template.line',
         inverse_name='template_id',
     )
+    partner_id = fields.Many2one(
+        'res.partner', string='Partner'
+    )
+    move_ids = fields.One2many(
+        'account.move',
+        inverse_name='template_id',
+    )
+    state = fields.Selection(
+        [('draft', 'Draft'), ('running', 'In Process'), ('done', 'Done')],
+        string='Status', default='draft', required=True,
+        readonly=True, copy=False
+    )
+    date_start = fields.Date(
+        'Start Date', required=True, default=fields.Date.context_today)
+    period_total = fields.Integer(
+        'Number of Periods', required=True, default=12)
+    period_nbr = fields.Integer('Period', required=True, default=1)
+    period_type = fields.Selection(
+        [('day', 'Days'), ('month', 'Months'), ('year', 'Years')],
+        'Period Type', required=True, default='month')
+
+    @api.multi
+    def button_compute(self):
+        for tmplt in self:
+            ds = tmplt.date_start
+            wiz = self.env['wizard.select.move.template'].create(
+                {'template_id': tmplt.id})
+            vals = {
+                'day': lambda tmp: (
+                    datetime.strptime(ds, '%Y-%m-%d') +
+                    relativedelta(days=tmp.period_nbr)).strftime('%Y-%m-%d'),
+                'month': lambda tmp: (
+                    datetime.strptime(ds, '%Y-%m-%d') +
+                    relativedelta(months=tmp.period_nbr)).strftime('%Y-%m-%d'),
+                'year': lambda tmp: (
+                    datetime.strptime(ds, '%Y-%m-%d') +
+                    relativedelta(years=tmp.period_nbr)).strftime('%Y-%m-%d')}
+            for i in range(tmplt.period_total):
+                wiz.load_template(ds)
+                ds = vals[tmplt.period_type](tmplt)
+            tmplt.write({'state': 'running'})
+
+    @api.multi
+    def set_draft(self):
+        for tmplt in self:
+            tmplt.write({'state': 'draft'})
+        return False
+
+    @api.multi
+    def remove_moves(self):
+        for tmplt in self:
+            tmplt.move_ids.filtered(
+                lambda move: move.state == 'draft').unlink()
+            tmplt.write({'state': 'draft'})
+        return False
 
     @api.multi
     def action_run_template(self):
@@ -61,3 +115,9 @@ class AccountMoveTemplateLine(models.Model):
         ('sequence_template_uniq', 'unique (template_id,sequence)',
          'The sequence of the line must be unique per template !')
     ]
+
+
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
+    template_id = fields.Many2one('account.move.template')

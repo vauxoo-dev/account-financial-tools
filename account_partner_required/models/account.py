@@ -56,14 +56,14 @@ class AccountMoveLine(models.Model):
                     "Partner policy is set to 'Always' for the account '%s' "
                     "but the partner is missing in the account move line "
                     "with label '%s'.") % (line.account_id.name_get()[0][1],
-                                      line.name)
+                                           line.name)
             elif policy == 'never' and line.partner_id:
                 return _(
                     "Partner policy is set to 'Never' for the account '%s' "
                     "but the account move line with label '%s' has a partner "
                     "set '%s'.") % (line.account_id.name_get()[0][1],
-                                line.name,
-                                line.partner_id.name)
+                                    line.name,
+                                    line.partner_id.name)
 
     @api.multi
     @api.constrains('partner_id', 'account_id', 'debit', 'credit')

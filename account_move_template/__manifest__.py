@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-# Copyright 2015-2017 See manifest
-# License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
-
 {
     'name': "Account Move Template",
     'version': '11.0.1.0.0',
@@ -16,6 +12,7 @@
         'security/ir.model.access.csv',
         'view/move_template.xml',
         'wizard/select_template.xml',
+        'wizard/validate_template.xml',
     ],
     'test': [
     ],
