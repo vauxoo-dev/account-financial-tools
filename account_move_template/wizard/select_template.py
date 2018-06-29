@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-# Copyright 2015-2017 See manifest
-# License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
-
+from datetime import datetime
 from odoo import models, fields, api
 import time
 
@@ -45,14 +42,15 @@ class WizardSelectMoveTemplate(models.TransientModel):
         }
 
     @api.multi
-    def load_template(self):
+    def load_template(self, date=None):
         self.ensure_one()
         input_lines = {}
         for template_line in self.line_ids:
             input_lines[template_line.sequence] = template_line.amount
         amounts = self.template_id.compute_lines(input_lines)
         name = self.template_id.name
-        partner = self.partner_id.id
+        partner = self.template_id.partner_id.id or self.partner_id.id
+        date = date or datetime.today()
         moves = self.env['account.move']
         for journal in self.template_id.template_line_ids.mapped('journal_id'):
             lines = []
@@ -62,7 +60,8 @@ class WizardSelectMoveTemplate(models.TransientModel):
                     lambda j: j.journal_id == journal):
                 lines.append((0, 0,
                               self._prepare_line(line, amounts, partner)))
-            move.write({'line_ids': lines})
+            move.write({'line_ids': lines, 'template_id': self.template_id.id})
+            move.date = date
         return {
             'domain': [('id', 'in', moves.ids)],
             'name': 'Entries from template: %s' % name,

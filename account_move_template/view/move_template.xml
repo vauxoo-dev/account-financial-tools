@@ -56,8 +56,23 @@
                     <header>
                         <button string="Test template"
                                 name="action_run_template"
+                                type="object"/>
+                        <button string="Set to draft"
+                                name="set_draft"
+                                attrs="{'invisible': [('state', '=', 'draft')]}"
                                 class="btn-primary"
                                 type="object"/>
+                        <button string="Remove Moves"
+                                name="remove_moves"
+                                class="btn-danger"
+                                attrs="{'invisible': [('state', '!=', 'running')]}"
+                                type="object"/>
+                        <button string="Compute"
+                                name="button_compute"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"
+                                class="btn-primary"
+                                type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,running,done"/>
                     </header>
                     <sheet>
                         <div class="oe_title">
@@ -66,13 +81,19 @@
                         </div>
                         <group>
                             <field name="company_id" widget='selection' groups="base.group_multi_company"/>
+                            <field name="partner_id"/>
+                            <field name="date_start"/>
+                            <field name="period_total"/>
+                            <field name="period_nbr"/>
+                            <field name="period_type"/>
                         </group>
                         <field nolabel="1" name="template_line_ids"/>
+                        <h2>Journal Entries</h2>
+                        <field name="move_ids"/>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
-                        <!--<field name="activity_ids"
-                        widget="mail_activity"/>  TODO: uncomment on saas-15-->
+                        <field name="activity_ids" widget="mail_activity"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -86,6 +107,8 @@
                 <tree string="Journal Entry Template">
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="date_start"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -99,6 +122,7 @@
                     <separator orientation="vertical"/>
                       <field name="name"/>
                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                      <field name="state"/>
                     </group>
                 </search>
             </field>
@@ -113,8 +137,14 @@
         </record>
 
         <menuitem
-            action="action_move_template_form"
-            id="menu_action_move_template_form" sequence="300"
+            name="Recurring Entries"
+            id="menu_action_move_template_menu" sequence="300"
             parent="account.menu_finance_configuration"
+            groups="account.group_account_manager"/>
+
+        <menuitem
+            action="action_move_template_form"
+            id="menu_action_move_template_form" sequence="10"
+            parent="account_move_template.menu_action_move_template_menu"
             groups="account.group_account_manager"/>
 </odoo>
