@@ -6,6 +6,7 @@
             <field name="arch" type="xml">
                 <form string="Move Template" >
                     <field name="state" invisible="1"/>
+                    <field name="compute_moves" invisible="1"/>
                     <group>
                         <group>
                             <field name="template_id" widget="selection"
@@ -20,7 +21,8 @@
                             attrs="{'invisible':[('state','!=','template_selected')]}"/>
                     <field name="line_ids" nolabel="1" attrs="{'invisible':[('state','!=','template_selected')]}"/>
                     <footer>
-                        <button name="load_template" class="btn-primary" string="Load" type="object" colspan="1" attrs="{'invisible':[('state','!=','template_selected')]}" />
+                        <button name="button_compute_template" class="btn-primary" string="Compute" type="object" colspan="1" attrs="{'invisible':['|',('compute_moves','!=',True),('state','!=','template_selected')]}"/>
+                        <button name="load_template" class="btn-primary" string="Load" type="object" colspan="1" attrs="{'invisible':['|',('state','!=','template_selected'),('compute_moves','=',True)]}" />
                         <button name="load_lines" class="btn-primary" string="Next" type="object" attrs="{'invisible':[('state','=','template_selected')]}" />
                         <button special="cancel" string="Cancel" class="btn-default"/>
                     </footer>

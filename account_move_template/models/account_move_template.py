@@ -1,6 +1,3 @@
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-
 from odoo import models, fields, api
 
 
@@ -49,24 +46,14 @@ class AccountMoveTemplate(models.Model):
 
     @api.multi
     def button_compute(self):
-        for tmplt in self:
-            ds = tmplt.date_start
-            wiz = self.env['wizard.select.move.template'].create(
-                {'template_id': tmplt.id})
-            vals = {
-                'day': lambda tmp: (
-                    datetime.strptime(ds, '%Y-%m-%d') +
-                    relativedelta(days=tmp.period_nbr)).strftime('%Y-%m-%d'),
-                'month': lambda tmp: (
-                    datetime.strptime(ds, '%Y-%m-%d') +
-                    relativedelta(months=tmp.period_nbr)).strftime('%Y-%m-%d'),
-                'year': lambda tmp: (
-                    datetime.strptime(ds, '%Y-%m-%d') +
-                    relativedelta(years=tmp.period_nbr)).strftime('%Y-%m-%d')}
-            for i in range(tmplt.period_total):
-                wiz.load_template(ds)
-                ds = vals[tmplt.period_type](tmplt)
-            tmplt.write({'state': 'running'})
+        self.ensure_one()
+        action = self.env.ref(
+            'account_move_template.action_wizard_select_template').read()[0]
+        action.update({'context': {
+            'default_template_id': self.id,
+            'default_compute_moves': True,
+        }})
+        return action
 
     @api.multi
     def set_draft(self):

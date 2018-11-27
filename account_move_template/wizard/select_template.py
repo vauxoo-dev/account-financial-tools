@@ -1,5 +1,6 @@
 from datetime import datetime
 from odoo import models, fields, api
+from dateutil.relativedelta import relativedelta
 import time
 
 
@@ -12,6 +13,7 @@ class WizardSelectMoveTemplate(models.TransientModel):
         'wizard.select.move.template.line', 'template_id')
     state = fields.Selection(
         [('template_selected', 'Template selected')], 'State')
+    compute_moves = fields.Boolean(default=False)
 
     @api.multi
     def load_lines(self):
@@ -26,6 +28,8 @@ class WizardSelectMoveTemplate(models.TransientModel):
                 'account_id': line.account_id.id,
                 'move_line_type': line.move_line_type,
             })
+        if not self.line_ids and self.compute_moves:
+            return self.button_compute_template()
         if not self.line_ids:
             return self.load_template()
         self.state = 'template_selected'
@@ -42,7 +46,7 @@ class WizardSelectMoveTemplate(models.TransientModel):
         }
 
     @api.multi
-    def load_template(self, date=None):
+    def load_template(self):
         self.ensure_one()
         input_lines = {}
         for template_line in self.line_ids:
@@ -50,7 +54,7 @@ class WizardSelectMoveTemplate(models.TransientModel):
         amounts = self.template_id.compute_lines(input_lines)
         name = self.template_id.name
         partner = self.template_id.partner_id.id or self.partner_id.id
-        date = date or datetime.today()
+        date = self.env.context.get('move_date', datetime.today())
         moves = self.env['account.move']
         for journal in self.template_id.template_line_ids.mapped('journal_id'):
             lines = []
@@ -71,6 +75,25 @@ class WizardSelectMoveTemplate(models.TransientModel):
             'type': 'ir.actions.act_window',
             'target': 'current',
         }
+
+    @api.multi
+    def button_compute_template(self):
+        tmplt = self.template_id
+        ds = tmplt.date_start
+        vals = {
+            'day': lambda tmp: (
+                datetime.strptime(ds, '%Y-%m-%d') +
+                relativedelta(days=tmp.period_nbr)).strftime('%Y-%m-%d'),
+            'month': lambda tmp: (
+                datetime.strptime(ds, '%Y-%m-%d') +
+                relativedelta(months=tmp.period_nbr)).strftime('%Y-%m-%d'),
+            'year': lambda tmp: (
+                datetime.strptime(ds, '%Y-%m-%d') +
+                relativedelta(years=tmp.period_nbr)).strftime('%Y-%m-%d')}
+        for i in range(tmplt.period_total):
+            self.with_context({'move_date': ds}).load_template()
+            ds = vals[tmplt.period_type](tmplt)
+        tmplt.write({'state': 'running'})
 
     @api.model
     def _create_move(self, ref, journal_id, partner_id):
