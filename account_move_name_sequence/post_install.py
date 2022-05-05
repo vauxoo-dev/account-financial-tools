@@ -4,12 +4,7 @@
 # @author: Moisés López <moylop260@vauxoo.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import logging
-
-from dateutil.relativedelta import relativedelta
-from odoo import SUPERUSER_ID, api, fields
-
-_logger = logging.getLogger(__name__)
+from odoo import SUPERUSER_ID, api
 
 
 def create_journal_sequences(cr, registry):
@@ -25,7 +20,7 @@ def create_journal_sequences(cr, registry):
             seq_vals = journal._prepare_sequence(journal_vals)
             seq_vals.update(journal._prepare_sequence_current_moves())
             vals = {"sequence_id": env["ir.sequence"].create(seq_vals).id}
-            if journal.refund_sequence:
+            if journal.type in ("sale", "purchase") and journal.refund_sequence:
                 rseq_vals = journal._prepare_sequence(journal_vals, refund=True)
                 rseq_vals.update(journal._prepare_sequence_current_moves(refund=True))
                 vals["refund_sequence_id"] = env["ir.sequence"].create(rseq_vals).id
