@@ -117,107 +117,116 @@ class AccountJournal(models.Model):
             move_domain, limit=1, order="id DESC"
         )
         msg_err = (
-            "Journal %s could not get sequence %s values based on current moves. Using default values."
-            % (self.id, refund and "refund" or "")
+            "Journal %s could not get sequence %s values based on current moves. "
+            "Using default values." % (self.id, refund and "refund" or "")
         )
         if not last_move:
             _logger.warning("%s %s", msg_err, "No moves found")
             return {}
         try:
-            # Big try-except because of get the current sequence values could be hard to get and buggy
-            # But even we can use the default values or do manual changes instead of raising errors
-            last_sequence = last_move._get_last_sequence()
-            if not last_sequence:
-                last_sequence = (
-                    last_move._get_last_sequence(relaxed=True)
-                    or last_move._get_starting_sequence()
-                )
+            with self.env.cr.savepoint():
+                # get the current sequence values could be buggy to get
+                # But even we can use the default values
+                # or do manual changes instead of raising errors
+                last_sequence = last_move._get_last_sequence()
+                if not last_sequence:
+                    last_sequence = (
+                        last_move._get_last_sequence(relaxed=True)
+                        or last_move._get_starting_sequence()
+                    )
 
-            __, seq_format_values = last_move._get_sequence_format_param(last_sequence)
-            prefix1 = seq_format_values["prefix1"]
-            prefix = prefix1
-            if seq_format_values["year_length"] == 4:
-                prefix += "%(range_year)s"
-            elif seq_format_values["year_length"] == 2:
-                prefix += "%(range_y)s"
-            prefix2 = seq_format_values.get("prefix2") or ""
-            prefix += prefix2
-            month = seq_format_values.get("month")  # It is 0 if only have year
-            if month:
-                prefix += "%(range_month)s"
-            prefix3 = seq_format_values.get("prefix3") or ""
-            where_name_value = "%s%s%s%s%s%%" % (
-                prefix1,
-                "_" * seq_format_values["year_length"],
-                prefix2,
-                "_" * bool(month) * 2,
-                prefix3,
-            )
-            select_name_values = []
-            prefixes = prefix1 + prefix2
-            select_name_values.append(
-                "split_part(name, '%s', %d)" % (prefix2, prefixes.count(prefix2))
-                if prefix2
-                else "''"
-            )
-            prefixes += prefix3
-            select_name_values.append(
-                "split_part(name, '%s', %d)" % (prefix3, prefixes.count(prefix3))
-                if prefix3
-                else "''"
-            )
-            select_max_value = (
-                "MAX(split_part(name, '%s', %d)::INTEGER) AS max_number"
-                % (prefixes[-1], prefixes.count(prefixes[-1]) + 1)
-            )
-            query = (
-                "SELECT %s, %s FROM account_move WHERE name LIKE %%s AND journal_id=%%s GROUP BY 1,2"
-                % (", ".join(select_name_values), select_max_value)
-            )
-            self.env.cr.execute(query, (where_name_value, self.id))
-            res = self.env.cr.fetchall()
-            prefix += prefix3
-            seq_vals = {
-                "padding": seq_format_values["seq_length"],
-                "suffix": seq_format_values["suffix"],
-                "prefix": prefix,
-                "date_range_ids": [],
-                "use_date_range": True,
-            }
-            for year, month, max_number in res:
-                if not year and not month:
-                    seq_vals.update(
-                        {
-                            "use_date_range": False,
-                            "number_next_actual": max_number + 1,
-                        }
-                    )
-                    continue
-                if len(year) == 2:
-                    # Year >=50 will be considered as last century 1950
-                    # Year <=49 will be considered as current century 2049
-                    if int(year) >= 50:
-                        year = "19" + year
-                    else:
-                        year = "20" + year
-                if month:
-                    date_from = fields.Date.to_date("%s-%s-1" % (year, month))
-                    date_to = date_from + relativedelta(day=31)
-                else:
-                    date_from = fields.Date.to_date("%s-1-1" % year)
-                    date_to = fields.Date.to_date("%s-12-31" % year)
-                seq_vals["date_range_ids"].append(
-                    (
-                        0,
-                        0,
-                        {
-                            "date_from": date_from,
-                            "date_to": date_to,
-                            "number_next_actual": max_number + 1,
-                        },
-                    )
+                __, seq_format_values = last_move._get_sequence_format_param(
+                    last_sequence
                 )
-            return seq_vals
+                prefix1 = seq_format_values["prefix1"]
+                prefix = prefix1
+                if seq_format_values["year_length"] == 4:
+                    prefix += "%(range_year)s"
+                elif seq_format_values["year_length"] == 2:
+                    prefix += "%(range_y)s"
+                prefix2 = seq_format_values.get("prefix2") or ""
+                prefix += prefix2
+                month = seq_format_values.get("month")  # It is 0 if only have year
+                if month:
+                    prefix += "%(range_month)s"
+                prefix3 = seq_format_values.get("prefix3") or ""
+                where_name_value = "%s%s%s%s%s%%" % (
+                    prefix1,
+                    "_" * seq_format_values["year_length"],
+                    prefix2,
+                    "_" * bool(month) * 2,
+                    prefix3,
+                )
+                prefixes = prefix1 + prefix2
+                select_year = (
+                    "split_part(name, '%s', %d)" % (prefix2, prefixes.count(prefix2))
+                    if prefix2
+                    else "''"
+                )
+                prefixes += prefix3
+                select_month = (
+                    "split_part(name, '%s', %d)" % (prefix3, prefixes.count(prefix3))
+                    if prefix3
+                    else "''"
+                )
+                select_max_number = (
+                    "MAX(split_part(name, '%s', %d)::INTEGER) AS max_number"
+                    % (prefixes[-1], prefixes.count(prefixes[-1]) + 1)
+                )
+                query = (
+                    "SELECT %s, %s, %s FROM account_move "
+                    "WHERE name LIKE %%s AND journal_id=%%s GROUP BY 1,2"
+                ) % (
+                    select_year,
+                    select_month,
+                    select_max_number,
+                )
+                # It is not using user input
+                # pylint: disable=sql-injection
+                self.env.cr.execute(query, (where_name_value, self.id))
+                res = self.env.cr.fetchall()
+                prefix += prefix3
+                seq_vals = {
+                    "padding": seq_format_values["seq_length"],
+                    "suffix": seq_format_values["suffix"],
+                    "prefix": prefix,
+                    "date_range_ids": [],
+                    "use_date_range": True,
+                }
+                for year, month, max_number in res:
+                    if not year and not month:
+                        seq_vals.update(
+                            {
+                                "use_date_range": False,
+                                "number_next_actual": max_number + 1,
+                            }
+                        )
+                        continue
+                    if len(year) == 2:
+                        # Year >=50 will be considered as last century 1950
+                        # Year <=49 will be considered as current century 2049
+                        if int(year) >= 50:
+                            year = "19" + year
+                        else:
+                            year = "20" + year
+                    if month:
+                        date_from = fields.Date.to_date("%s-%s-1" % (year, month))
+                        date_to = date_from + relativedelta(day=31)
+                    else:
+                        date_from = fields.Date.to_date("%s-1-1" % year)
+                        date_to = fields.Date.to_date("%s-12-31" % year)
+                    seq_vals["date_range_ids"].append(
+                        (
+                            0,
+                            0,
+                            {
+                                "date_from": date_from,
+                                "date_to": date_to,
+                                "number_next_actual": max_number + 1,
+                            },
+                        )
+                    )
+                return seq_vals
         except Exception as e:
             _logger.warning("%s %s", msg_err, e)
         return {}
