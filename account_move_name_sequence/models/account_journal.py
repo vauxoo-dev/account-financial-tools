@@ -21,7 +21,6 @@ class AccountJournal(models.Model):
         "ir.sequence",
         string="Entry Sequence",
         copy=False,
-        required=True,
         check_company=True,
         domain="[('company_id', '=', company_id)]",
         help="This sequence will be used to generate the journal entry number.",
@@ -136,8 +135,6 @@ class AccountJournal(models.Model):
                 'date_range_ids': [],
                 'use_date_range': True,
             }
-            if self.id == 104:
-                import ipdb;ipdb.set_trace()
             for year, month, max_number in res:
                 if not year and not month:
                     seq_vals.update({
