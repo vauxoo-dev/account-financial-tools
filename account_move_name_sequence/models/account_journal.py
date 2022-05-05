@@ -1,5 +1,7 @@
 # Copyright 2021 Akretion France (http://www.akretion.com/)
+# Copyright 2022 Vauxoo (https://www.vauxoo.com/)
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
+# @author: Moisés López <moylop260@vauxoo.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
@@ -92,11 +94,13 @@ class AccountJournal(models.Model):
             else:
                 move_domain.append(('move_type', 'IN', ('out_refund', 'in_refund')))
         last_move = self.env['account.move'].search(move_domain, limit=1, order='id DESC')
-        msg_err = "Journal %s could not get sequence values based on current moves. Using default values." % self.id
+        msg_err = "Journal %s could not get sequence %s values based on current moves. Using default values." % (self.id, refund and "refund" or "")
         if not last_move:
-            _logger.warning("%s\n%s", msg_err, "No moves found")
+            _logger.warning("%s %s", msg_err, "No moves found")
             return {}
         try:
+            # Big try-except because of get the current sequence values could be hard to get and buggy
+            # But even we can use the default values or do manual changes instead of raising errors
             last_sequence = last_move._get_last_sequence()
             if not last_sequence:
                 last_sequence = last_move._get_last_sequence(relaxed=True) or last_move._get_starting_sequence()
@@ -132,6 +136,8 @@ class AccountJournal(models.Model):
                 'date_range_ids': [],
                 'use_date_range': True,
             }
+            if self.id == 104:
+                import ipdb;ipdb.set_trace()
             for year, month, max_number in res:
                 if not year and not month:
                     seq_vals.update({
@@ -157,9 +163,9 @@ class AccountJournal(models.Model):
                     'date_to': date_to,
                     'number_next_actual': max_number + 1,
                 }))
-                return seq_vals
+            return seq_vals
         except Exception as e:
-            _logger.warning("%s\n%s", msg_err, e)
+            _logger.warning("%s %s", msg_err, e)
         return {}
 
     @api.model
