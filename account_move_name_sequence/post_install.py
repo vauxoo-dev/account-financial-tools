@@ -56,11 +56,15 @@ def create_journal_sequences(cr, registry):
                 if prefix2:
                     prefixes += prefix2
                     select_name_values.append("split_part(name, '%s', %d)" % (prefix2, prefixes.count(prefix2)))
-                if prefix3:
+                else:
+                    select_name_values.append("''")
+                if prefix3 and month:
                     prefixes += prefix3
                     select_name_values.append("split_part(name, '%s', %d)" % (prefix3, prefixes.count(prefix3)))
+                else:
+                    select_name_values.append("''")
                 select_max_value = "MAX(split_part(name, '%s', %d)::INTEGER) AS max_number" % (prefixes[-1], prefixes.count(prefixes[-1]) + 1)
-                query = "SELECT %s, %s FROM account_move WHERE name LIKE '%s' AND journal_id=%d GROUP BY %s" % (', '.join(select_name_values), select_max_value, where_name_value, journal.id, ', '.join(select_name_values))
+                query = "SELECT %s, %s FROM account_move WHERE name LIKE '%s' AND journal_id=%d GROUP BY 1,2" % (', '.join(select_name_values), select_max_value, where_name_value, journal.id)
                 env.cr.execute(query)
                 res = env.cr.fetchall()
                 date_range_lines = []
@@ -68,8 +72,16 @@ def create_journal_sequences(cr, registry):
                     # TODO: Check <=1999 year but 2 digits
                     # TODO: Consider date 01
                     # TODO: if month is not present so only create year range
-                    date_from = fields.Date.to_date('%s-%s-1' % (year, month))
-                    date_to = date_from + relativedelta(day=31)
+                    if not year and not month:
+                        # TODO: Add logging warning to know a sequence could be configured manually
+                        # or don't use date_range for these kind cases
+                        continue
+                    if month:
+                        date_from = fields.Date.to_date('%s-%s-1' % (year, month))
+                        date_to = date_from + relativedelta(day=31)
+                    else:
+                        date_from = fields.Date.to_date('%s-1-1' % year)
+                        date_to = date_from + relativedelta(day=31, month=12)
                     date_range_lines.append((0, 0, {
                         'date_from': date_from,
                         'date_to': date_to,
