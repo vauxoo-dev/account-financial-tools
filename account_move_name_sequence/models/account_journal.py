@@ -79,7 +79,7 @@ class AccountJournal(models.Model):
     @api.model
     def _prepare_sequence(self, vals, refund=False):
         code = vals.get("code") and vals["code"].upper() or ""
-        prefix = "%s%s/%%(range_year)s/" % (refund and "R" or "", code)
+        prefix = "%s%s/%%(range_year)s/%%(range_month)s/" % (refund and "R" or "", code)
         seq_vals = {
             "name": "%s%s"
             % (vals.get("name", _("Sequence")), refund and _("Refund") + " " or ""),
