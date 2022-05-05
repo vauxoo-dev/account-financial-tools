@@ -17,6 +17,8 @@ _logger = logging.getLogger(__name__)
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
+    # Redefine the default to True as <=v13.0
+    refund_sequence = fields.Boolean(default=True)
     sequence_id = fields.Many2one(
         "ir.sequence",
         string="Entry Sequence",
@@ -168,7 +170,7 @@ class AccountJournal(models.Model):
     @api.model
     def _prepare_sequence(self, vals, refund=False):
         code = self.code.upper() or ""
-        prefix = "%s%s/%%(range_year)s/%%(range_month)s/" % (refund and "R" or "", code)
+        prefix = "%s%s/%%(range_year)s/" % (refund and "R" or "", code)
         seq_vals = {
             "name": "%s%s" % (self.name or _("Sequence"), refund and _("Refund") + " " or ""),
             "company_id": self.company_id.id or self.env.company.id,
