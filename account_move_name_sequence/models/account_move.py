@@ -27,6 +27,11 @@ class AccountMove(models.Model):
         ),
     ]
 
+    def _compute_name(self):
+        moves_by_sequence = self.filtered(lambda move: move.journal_id and move.journal_id.sequence_id)
+        moves_by_sequence._compute_name_by_sequence()
+        return super(AccountMove, self - moves_by_sequence)._compute_name()
+
     @api.depends("state", "journal_id", "date")
     def _compute_name_by_sequence(self):
         for move in self:
