@@ -8,7 +8,7 @@ from datetime import datetime
 
 from freezegun import freeze_time
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
@@ -64,8 +64,18 @@ class TestAccountMoveNameSequence(TransactionCase):
                 "date": self.date,
                 "journal_id": self.misc_journal.id,
                 "line_ids": [
-                    (0, 0, {"account_id": self.account1.id, "debit": 10}),
-                    (0, 0, {"account_id": self.account2.id, "credit": 10}),
+                    Command.create(
+                        {
+                            "account_id": self.account1.id,
+                            "debit": 10,
+                        }
+                    ),
+                    Command.create(
+                        {
+                            "account_id": self.account2.id,
+                            "credit": 10,
+                        }
+                    ),
                 ],
             }
         )
@@ -103,8 +113,18 @@ class TestAccountMoveNameSequence(TransactionCase):
                     "date": "2021-12-31",
                     "journal_id": self.misc_journal.id,
                     "line_ids": [
-                        (0, 0, {"account_id": self.account1.id, "debit": 10}),
-                        (0, 0, {"account_id": self.account2.id, "credit": 10}),
+                        Command.create(
+                            {
+                                "account_id": self.account1.id,
+                                "debit": 10,
+                            }
+                        ),
+                        Command.create(
+                            {
+                                "account_id": self.account2.id,
+                                "credit": 10,
+                            }
+                        ),
                     ],
                 }
             )
@@ -116,8 +136,18 @@ class TestAccountMoveNameSequence(TransactionCase):
                     "date": "2022-06-30",
                     "journal_id": self.misc_journal.id,
                     "line_ids": [
-                        (0, 0, {"account_id": self.account1.id, "debit": 10}),
-                        (0, 0, {"account_id": self.account2.id, "credit": 10}),
+                        Command.create(
+                            {
+                                "account_id": self.account1.id,
+                                "debit": 10,
+                            }
+                        ),
+                        Command.create(
+                            {
+                                "account_id": self.account2.id,
+                                "credit": 10,
+                            }
+                        ),
                     ],
                 }
             )
@@ -130,8 +160,18 @@ class TestAccountMoveNameSequence(TransactionCase):
                     "date": "2022-07-01",
                     "journal_id": self.misc_journal.id,
                     "line_ids": [
-                        (0, 0, {"account_id": self.account1.id, "debit": 10}),
-                        (0, 0, {"account_id": self.account2.id, "credit": 10}),
+                        Command.create(
+                            {
+                                "account_id": self.account1.id,
+                                "debit": 10,
+                            }
+                        ),
+                        Command.create(
+                            {
+                                "account_id": self.account2.id,
+                                "credit": 10,
+                            }
+                        ),
                     ],
                 }
             )
@@ -146,18 +186,14 @@ class TestAccountMoveNameSequence(TransactionCase):
                 "partner_id": self.env.ref("base.res_partner_3").id,
                 "move_type": "in_invoice",
                 "invoice_line_ids": [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "account_id": self.account1.id,
                             "price_unit": 42.0,
                             "quantity": 12,
                         },
                     ),
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "account_id": self.account1.id,
                             "price_unit": 48.0,
@@ -177,12 +213,12 @@ class TestAccountMoveNameSequence(TransactionCase):
                 {
                     "journal_id": in_invoice.journal_id.id,
                     "reason": "no reason",
-                    "refund_method": "cancel",
                 }
             )
         )
-        reversal = move_reversal.reverse_moves()
+        reversal = move_reversal.refund_moves()
         reversed_move = self.env["account.move"].browse(reversal["res_id"])
+        reversed_move.action_post()
         self.assertTrue(reversed_move)
         self.assertEqual(reversed_move.state, "posted")
 
@@ -200,11 +236,10 @@ class TestAccountMoveNameSequence(TransactionCase):
                 {
                     "journal_id": in_invoice.journal_id.id,
                     "reason": "no reason",
-                    "refund_method": "modify",
                 }
             )
         )
-        reversal = move_reversal.reverse_moves()
+        reversal = move_reversal.modify_moves()
         draft_invoice = self.env["account.move"].browse(reversal["res_id"])
         self.assertTrue(draft_invoice)
         self.assertEqual(draft_invoice.state, "draft")
@@ -224,11 +259,10 @@ class TestAccountMoveNameSequence(TransactionCase):
                 {
                     "journal_id": in_invoice.journal_id.id,
                     "reason": "no reason",
-                    "refund_method": "refund",
                 }
             )
         )
-        reversal = move_reversal.reverse_moves()
+        reversal = move_reversal.refund_moves()
         draft_reversed_move = self.env["account.move"].browse(reversal["res_id"])
         self.assertTrue(draft_reversed_move)
         self.assertEqual(draft_reversed_move.state, "draft")
@@ -242,9 +276,7 @@ class TestAccountMoveNameSequence(TransactionCase):
                 "partner_id": self.env.ref("base.res_partner_3").id,
                 "move_type": "in_refund",
                 "invoice_line_ids": [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "account_id": self.account1.id,
                             "price_unit": 42.0,
@@ -270,14 +302,27 @@ class TestAccountMoveNameSequence(TransactionCase):
                 "date": self.date,
                 "journal_id": self.misc_journal.id,
                 "line_ids": [
-                    (0, 0, {"account_id": self.account1.id, "debit": 10}),
-                    (0, 0, {"account_id": self.account2.id, "credit": 10}),
+                    Command.create(
+                        {
+                            "account_id": self.account1.id,
+                            "debit": 10,
+                        }
+                    ),
+                    Command.create(
+                        {
+                            "account_id": self.account2.id,
+                            "credit": 10,
+                        }
+                    ),
                 ],
             }
         )
         self.assertEqual(invoice.name, "/")
         invoice.action_post()
-        error_msg = "You cannot delete an item linked to a posted entry."
+        error_msg = (
+            "You can't delete a posted journal item. Don’t play games with your accounting "
+            "records; reset the journal entry to draft before deleting it."
+        )
         with self.assertRaisesRegex(UserError, error_msg):
             invoice.unlink()
         invoice.button_draft()
@@ -295,9 +340,7 @@ class TestAccountMoveNameSequence(TransactionCase):
                 "partner_id": self.env.ref("base.res_partner_3").id,
                 "move_type": "in_refund",
                 "invoice_line_ids": [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "account_id": self.account1.id,
                             "price_unit": 42.0,
@@ -309,7 +352,10 @@ class TestAccountMoveNameSequence(TransactionCase):
         )
         self.assertEqual(in_refund_invoice.name, "/")
         in_refund_invoice.action_post()
-        error_msg = "You cannot delete an item linked to a posted entry."
+        error_msg = (
+            "You can't delete a posted journal item. Don’t play games with your accounting "
+            "records; reset the journal entry to draft before deleting it."
+        )
         with self.assertRaisesRegex(UserError, error_msg):
             in_refund_invoice.unlink()
         in_refund_invoice.button_draft()
