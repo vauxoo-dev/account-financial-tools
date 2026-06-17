@@ -88,7 +88,12 @@ class AccountMove(models.Model):
                 # next_by_id(date) only applies on ir.sequence.date_range selection
                 # => we use with_context(ir_sequence_date=date).next_by_id()
                 # which applies on ir.sequence.date_range selection AND prefix
-                name = seq.with_context(ir_sequence_date=move.date).next_by_id()
+                # Odoo 19 ir_sequence._next() calls replace(tzinfo=None) on the
+                # date context, which requires a datetime object rather than a
+                # date object.
+                name = seq.with_context(
+                    ir_sequence_date=fields.Datetime.to_datetime(move.date)
+                ).next_by_id()
             move.name = name
         # Force compute of sequence_prefix and sequence_number
         self._compute_split_sequence()
